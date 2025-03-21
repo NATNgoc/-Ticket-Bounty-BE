@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from 'src/modules/ticket/entities/ticket.entity';
 import { Repository } from 'typeorm';
@@ -6,6 +6,7 @@ import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { User } from '../auth/entities/user.entity';
 import { FindAllTicketsDto } from './dto/find-all-tickets.dto';
+import { paginate } from 'src/common/helper/pagination.helper';
 
 @Injectable()
 export class TicketService implements BaseService {
@@ -28,7 +29,7 @@ export class TicketService implements BaseService {
     return result;
   }
 
-  async findAll(dto: FindAllTicketsDto): Promise<Ticket[]> {
+  async findAll(dto: FindAllTicketsDto): Promise<ReturnType<typeof paginate<Ticket>>> {
     const queryBuilder = this.ticketRepository.createQueryBuilder('ticket');    
     console.log(dto)
     if (dto.userId) {
@@ -42,8 +43,7 @@ export class TicketService implements BaseService {
     queryBuilder.leftJoinAndSelect('ticket.user', 'user')
     .addSelect(['user.id', 'user.name']);
     queryBuilder.orderBy(`ticket.${dto.sortBy}`, dto.order);
-    const tickets = (await queryBuilder.getMany());
-    return tickets
+    return await paginate<Ticket>(queryBuilder, dto.offset, dto.limit)
   }
 
 
@@ -73,6 +73,8 @@ export class TicketService implements BaseService {
   }
 
   async remove(id: string) {
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    // throw new ForbiddenException("Ngu")
     const ticket = await this.findOne(id.toString(), true);
     return this.ticketRepository.remove(ticket);
   }
