@@ -14,7 +14,7 @@ import { CommonModule } from './common/common.module';
     ConfigModule.forRoot({
       isGlobal: true,
       // ignoreEnvFile: true, 
-      // envFilePath: ['./src/.env'],
+      envFilePath: ['./src/.env'],
     }),
     TicketModule,
     AuthModule,

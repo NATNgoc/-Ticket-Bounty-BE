@@ -21,6 +21,8 @@ export class AuthController {
         return await this.authService.login(dto.email, dto.password)
     }
 
+    @Get()
+
     @Delete("temp")
     @HttpCode(200)
     async deleteUser(@Body() {id}: {id: string}) {

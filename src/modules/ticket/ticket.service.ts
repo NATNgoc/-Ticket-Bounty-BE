@@ -73,8 +73,6 @@ export class TicketService implements BaseService {
   }
 
   async remove(id: string) {
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
-    // throw new ForbiddenException("Ngu")
     const ticket = await this.findOne(id.toString(), true);
     return this.ticketRepository.remove(ticket);
   }
