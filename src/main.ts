@@ -16,6 +16,7 @@ async function bootstrap() {
       // },
     }),
   );
+  app.enableCors();
   const configService = app.get(ConfigService);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   const port = +configService.get<number>(EnvKeyConstant.PORT) | 3000;
