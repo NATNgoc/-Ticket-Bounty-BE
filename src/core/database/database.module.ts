@@ -17,7 +17,7 @@ import { ENTITIES } from 'src/core/database/entities.constant';
           password: configService.get(EnvKeyConstant.PASS_DB),
           database: configService.get(EnvKeyConstant.NAME_DB),
           entities: ENTITIES,
-          synchronize: true,
+          synchronize: false,
         };
       },
       inject: [ConfigService],

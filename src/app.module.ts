@@ -13,7 +13,8 @@ import { CommonModule } from './common/common.module';
     DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['./src/.env'],
+      // ignoreEnvFile: true, 
+      // envFilePath: ['./src/.env'],
     }),
     TicketModule,
     AuthModule,

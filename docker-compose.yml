@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  be:
+    build: .
+    ports:
+      - '3002:3002'
+    environment:
+      - TYPE_DB=postgres
+      - HOST_DB=aws-0-ap-southeast-1.pooler.supabase.com
+      - PORT_DB=6543
+      - USER_DB=postgres.eovxnsbwheddbcyciflt
+      - PASS_DB=qqKkka3Y2NDL0Mcg
+      - NAME_DB=postgres
+      - PORT=3002
+      - JWT_SECRET=nguyenanhtuanngoc
+      - JWT_ACCESS_TOKEN_EXPIRATION_TIME=1h
+      - JWT_REFRESH_TOKEN_EXPIRATION_TIME=7d

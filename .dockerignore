@@ -1,0 +1,63 @@
+modules/*
+# Node dependencies
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Environment & local files
+**/.env
+.env.*
+*.env
+.DS_Store
+.history
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Build & cache files
+.next
+.nuxt
+dist
+build
+out
+.cache
+coverage
+*.log
+
+# Test artifacts
+coverage
+.nyc_output
+
+# Docker specific
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Git files
+.git
+.gitignore
+.github
+.gitkeep
+README.md
+CHANGELOG.md
+LICENSE
+
+# Temp files
+tmp
+temp
+*.tmp
+*.temp
+
+# Large media files
+*.mp4
+*.mov
+*.wmv
+*.avi
+*.mkv
