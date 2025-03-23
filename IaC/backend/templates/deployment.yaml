@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.app.name }}-depl"
+  labels:
+    app: "{{ .Values.app.label }}-label"
+  namespace: {{ .Values.app.namespace }}
+spec:
+  {{- if .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.app.label }}-label"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.app.label }}-label"
+    spec:
+      containers:
+        - name: {{ .Values.image.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.image.port }}
+              protocol: TCP
+          env:
+          {{- range .Values.envs }}
+            - name: {{ .name }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $.Values.app.name }}-secret"
+                  key: {{ .name | quote }}
+          {{- end }}
