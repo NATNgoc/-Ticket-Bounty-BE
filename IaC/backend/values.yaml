@@ -6,7 +6,8 @@ app:
 
 # Replica count for the deployment
 replicaCount: 2
-
+service: 
+  type: ClusterIP
 # Image configuration
 image:
   name: portfolio-backend
@@ -17,54 +18,30 @@ image:
 # Environment variables
 envs:
   - name: TYPE_DB
-    value: production
+    value: "postgres"  
   - name: HOST_DB
-    value: example-key
+    value: "example-key" 
   - name: PORT_DB
-    value: "false"
+    value: "5432" 
   - name: USER_DB
-    value: postgres
+    value: "postgres"  
   - name: PASS_DB
-    value: admin
+    value: "admin"  
   - name: NAME_DB
-    value: postgres
+    value: "postgres"  
   - name: PORT
     value: "3002"
   - name: JWT_SECRET
-    value: nguyenanhtuanngoc
+    value: "nguyenanhtuanngoc"  
   - name: JWT_ACCESS_TOKEN_EXPIRATION_TIME
     value: "1h"
   - name: JWT_REFRESH_TOKEN_EXPIRATION_TIME
     value: "7d"
 
-
-# Uncomment and adjust these sections as needed
-# Resources configuration
-# resources:
-#   limits:
-#     cpu: 100m
-#     memory: 128Mi
-#   requests:
-#     cpu: 50m
-#     memory: 64Mi
-
-# Liveness probe configuration
-# livenessProbe:
-#   httpGet:
-#     path: /health
-#     port: http
-#   initialDelaySeconds: 30
-#   periodSeconds: 10
-
-# Readiness probe configuration
-# readinessProbe:
-#   httpGet:
-#     path: /ready
-#     port: http
-#   initialDelaySeconds: 5
-#   periodSeconds: 10
-
-# Volume mounts configuration
-# volumeMounts:
-#   - name: config-volume
-#     mountPath: /app/config
+resources:
+  limits:
+    cpu: "100m"
+    memory: "128Mi"
+  requests:
+    cpu: "50m"
+    memory: "64Mi"

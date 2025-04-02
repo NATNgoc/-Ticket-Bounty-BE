@@ -20,6 +20,13 @@ spec:
       containers:
         - name: {{ .Values.image.name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          resouces:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu |}}
+              memory: {{ .Values.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
           ports:
             - name: http
               containerPort: {{ .Values.image.port }}
