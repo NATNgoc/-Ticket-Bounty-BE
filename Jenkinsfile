@@ -110,15 +110,17 @@ pipeline {
         stage('Commit version to git') {
             steps {  
                 withCredentials([string(credentialsId: "$ID_GIT_TOKEN_CREDENTAILS", variable: 'TOKEN')]) {
-                    sh '''
+                    sh """
+
                     git remote set-url origin https://${TOKEN}@github.com/NATNgoc/-Ticket-Bounty-BE.git
                     git status
                     git branch
                     git config --list
                     git add .
-                    git commit -m "[ci]: version bump"
+                    git commit -m '[ci]: version ${env.NEW_VERSION} bump'
                     git push origin HEAD:main
-                    '''
+
+                    """
                 }
             }
         }
