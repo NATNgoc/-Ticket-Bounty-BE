@@ -42,6 +42,7 @@ pipeline {
             stages {
                 stage('Setting profile git for jenkins') {
                     steps {
+                        sh 'git tag | xargs git tag -d'
                         sh 'git config --global user.email "jenkins@example.com"'
                         sh 'git config --global user.name "jenkins"'
                         withCredentials([usernamePassword(credentialsId: "${env.ID_GIT_CREDENTAILS}", passwordVariable: 'PASS', usernameVariable: 'USER')]) {
