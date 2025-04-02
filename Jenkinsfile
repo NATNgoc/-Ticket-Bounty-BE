@@ -11,6 +11,13 @@ pipeline {
         ID_GIT_CREDENTAILS = "github-account"
     }
     stages {
+
+        stage('Skip CI checking') {
+            steps {
+                scmSkip(deleteBuild: true, skipPattern:'.*\\[ci\\].*')
+            }
+        }
+
         stage('Intialized Nest CLI') {
             steps {
                 sh 'which nest >/dev/null || npm i -g @nestjs/cli'
@@ -46,7 +53,6 @@ pipeline {
                     steps {
                         script {
                             versioning("${env.VERSION_TYPE}")
-                            env.NEW_VERSION = getCurVersion()
                         }
                     }
                 }
@@ -55,14 +61,15 @@ pipeline {
         
         stage('Containerlize and Pushing') {
             environment {
-                APP_NAME = "portfolio-ngoc:${env.NEW_VERSION}"
+                APP_NAME = "portfolio-ngoc"
                 HOST_URL = 'registry.digitalocean.com/portfolio-ngoc'
             }
             stages{
                 stage('Build image') {
                     steps {
                         script {
-                            def imageName = "${HOST_URL}/${APP_NAME}"
+                            env.NEW_VERSION = getCurVersion()
+                            def imageName = "${HOST_URL}/${APP_NAME}:${NEW_VERSION}"
                             buildImage(imageName)
                         }
                     }
@@ -75,11 +82,24 @@ pipeline {
                 stage('Push image to registry') {
                     steps {
                         script {
-                            def imageName = "${HOST_URL}/${APP_NAME}"
+                            def imageName = "${HOST_URL}/${APP_NAME}:${NEW_VERSION}"
                             pushImage(imageName)
                         }
                     }
                 }
+            }
+        }
+
+        stage('Commit version to git') {
+            steps {  
+                sh '''
+                    git status
+                    git branch
+                    git config --list
+                    git add .
+                    git commit -m "[ci]: version bump"
+                '''  
+                sh "git push origin HEAD:${env.BRANCH_NAME}"
             }
         }
     }
