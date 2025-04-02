@@ -9,6 +9,9 @@ pipeline {
     environment {
         VERSION_TYPE = "patch"
         ID_GIT_CREDENTAILS = "github-account"
+        ID_GIT_TOKEN_CREDENTAILS = "github-token"
+        HELM_CHART_NAME = "portfolio-v1"
+        HELM_REPO = "registry.digitalocean.com/portfolio-ngoc/portfolio-ngoc"
     }
     stages {
 
@@ -42,11 +45,13 @@ pipeline {
             stages {
                 stage('Setting profile git for jenkins') {
                     steps {
-                        sh 'git tag | xargs git tag -d'
-                        sh 'git config --global user.email "jenkins@example.com"'
-                        sh 'git config --global user.name "jenkins"'
                         withCredentials([usernamePassword(credentialsId: "${env.ID_GIT_CREDENTAILS}", passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                            sh "git remote set-url origin https://${USER}:${PASS}@github.com/NATNgoc/-Ticket-Bounty-BE.git"
+                            sh '''
+                            git tag | xargs git tag -d
+                            git config --global user.email "jenkins@example.com"
+                            git config --global user.name "jenkins"
+                            git remote set-url origin https://github.com/NATNgoc/-Ticket-Bounty-BE.git
+                            '''
                         }
                     }
                 }
@@ -91,16 +96,30 @@ pipeline {
             }
         }
 
+        stage('Deploying to dev enviroment') {
+            steps {
+                withKubeConfig([credentialsId: 'k8s-config-file', serverUrl: 'https://fff0a127-53a3-4c08-9982-78f8b1d979d7.k8s.ondigitalocean.com']) {
+                    sh """
+                        helm list
+                        helm upgrade portfolio-v1 ./IaC/backend --set image.repository='${env.HELM_REPO}' --set image.tag='${env.NEW_VERSION}'
+                    """
+                }
+            }
+        }
+
         stage('Commit version to git') {
             steps {  
-                sh '''
+                withCredentials([string(credentialsId: "$ID_GIT_TOKEN_CREDENTAILS", variable: 'TOKEN')]) {
+                    sh '''
+                    git remote set-url origin https://${TOKEN}@github.com/NATNgoc/-Ticket-Bounty-BE.git
                     git status
                     git branch
                     git config --list
                     git add .
                     git commit -m "[ci]: version bump"
-                '''  
-                sh "git push origin HEAD:${env.BRANCH_NAME}"
+                    git push origin HEAD:main
+                    '''
+                }
             }
         }
     }
