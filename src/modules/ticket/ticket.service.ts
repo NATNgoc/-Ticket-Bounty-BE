@@ -31,7 +31,6 @@ export class TicketService implements BaseService {
 
   async findAll(dto: FindAllTicketsDto): Promise<ReturnType<typeof paginate<Ticket>>> {
     const queryBuilder = this.ticketRepository.createQueryBuilder('ticket');    
-    console.log(dto)
     if (dto.userId) {
       queryBuilder.where('ticket.user_id = :userId', { userId: dto.userId });
     }
