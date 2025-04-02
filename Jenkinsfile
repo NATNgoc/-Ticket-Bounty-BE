@@ -101,7 +101,7 @@ pipeline {
                 withKubeConfig([credentialsId: 'k8s-config-file', serverUrl: 'https://fff0a127-53a3-4c08-9982-78f8b1d979d7.k8s.ondigitalocean.com']) {
                     sh """
                         helm list
-                        helm upgrade portfolio-v1 ./IaC/backend --set image.repository='${env.HELM_REPO}' --set image.tag='${env.NEW_VERSION}'
+                        helm upgrade portfolio-v1 ./IaC/backend --reuse-values --set image.repository='${env.HELM_REPO}' --set image.tag='${env.NEW_VERSION}'
                     """
                 }
             }
