@@ -7,13 +7,15 @@ import { TicketModule } from './modules/ticket/ticket.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CommonModule } from './common/common.module';
+import { HealthModule } from './modules/health/health.module';
+
 
 @Module({
   imports: [
     DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      // ignoreEnvFile: true, 
+      ignoreEnvFile: true, 
       // envFilePath: ['./src/.env'],
     }),
     TicketModule,
@@ -22,6 +24,7 @@ import { CommonModule } from './common/common.module';
       global: true
     }),
     CommonModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
